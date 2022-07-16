@@ -1,0 +1,2 @@
+make
+./sigil_editor
