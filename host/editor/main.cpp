@@ -1,3 +1,6 @@
+#define GLEW_STATIC
+#include <GL/glew.h>
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -7,12 +10,9 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-#include <iostream>
+#include <string>
 
-void updateTexture()
-{
-	
-}
+#include <iostream>
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -20,6 +20,19 @@ void updateTexture()
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
+
+GLuint loadTexture (uint8_t* data, unsigned int data_width, unsigned int data_height)
+{
+	GLuint texture;
+	glGenTextures( 1, &texture );
+	glBindTexture( GL_TEXTURE_2D, texture );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB8, data_width, data_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data );
+	glBindTexture( GL_TEXTURE_2D, 0 );
+
+	return texture;
+}
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -67,6 +80,8 @@ int main(int, char**)
 	glfwMakeContextCurrent( window );
 	glfwSwapInterval( 1 ); // Enable vsync
 
+	glewInit();
+
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -88,39 +103,85 @@ int main(int, char**)
 	ImVec4 clear_color = ImVec4( 0.45f, 0.55f, 0.60f, 1.00f );
 
 	// MY TEXTURE LOADING CODE ----------------------------------------------------------
-	GLuint texture;
-	glGenTextures( 1, &texture );
-	glBindTexture( GL_TEXTURE_2D, texture );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	// TODO need to get this from the Surface class
 	constexpr unsigned int data_width = 640;
 	constexpr unsigned int data_height = 480;
-	uint8_t data[data_width * data_height * 3];
+	uint8_t fbData[data_width * data_height * 3];
+	uint8_t overlayData[data_width * data_height * 3];
 	for ( unsigned int y = 0; y < data_height; y++ )
 	{
 		for ( unsigned int x = 0; x < data_width; x++ )
 		{
-			data[(((y * data_width) + x) * 3) + 0] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
-			data[(((y * data_width) + x) * 3) + 1] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
-			data[(((y * data_width) + x) * 3) + 2] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
+			fbData[(((y * data_width) + x) * 3) + 0] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
+			fbData[(((y * data_width) + x) * 3) + 1] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
+			fbData[(((y * data_width) + x) * 3) + 2] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
+			overlayData[(((y * data_width) + x) * 3) + 0] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
+			overlayData[(((y * data_width) + x) * 3) + 1] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
+			overlayData[(((y * data_width) + x) * 3) + 2] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
 		}
 	}
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB8, data_width, data_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data );
-	glBindTexture( GL_TEXTURE_2D, 0 );
-	//create test checker image
-	// unsigned char texDat[64];
-	// for (int i = 0; i < 64; ++i)
-	//     texDat[i] = ((i + (i / 8)) % 2) * 128 + 127;
-
-	// //upload to GPU texture
-	// GLuint texture;
-	// glGenTextures(1, &texture);
-	// glBindTexture(GL_TEXTURE_2D, texture);
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	// glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 8, 8, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, texDat);
-	// glBindTexture(GL_TEXTURE_2D, 0);
+	GLuint fbTex = loadTexture( fbData, data_width, data_height );
+	GLuint overlayTex = loadTexture( overlayData, data_width, data_height );
+	// MY SHADER CODE -------------------------------------------------------------------
+	const char* vertexShaderCStr =
+		"#version 120\n"
+		"varying vec2 TexCoord;\n"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"   gl_Position = gl_Vertex;\n"
+		"   TexCoord = gl_MultiTexCoord0.xy;\n"
+		"}";
+	const char* fragmentShaderCStr =
+		"#version 330\n"
+		"out vec4 FragColor;\n"
+		"\n"
+		"varying vec2 TexCoord;\n"
+		"uniform sampler2D FBTex;\n"
+		"uniform sampler2D OverlayTex;\n"
+		"\n"
+		"void main()\n"
+		"{\n"
+		"   FragColor = ( texture(FBTex, TexCoord) * 0.5 ) + ( texture(OverlayTex, TexCoord) * 0.5 );\n"
+		"}";
+	GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
+	GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
+	glShaderSource( vertexShader, 1, &vertexShaderCStr, NULL );
+	glShaderSource( fragmentShader, 1, &fragmentShaderCStr, NULL );
+	glCompileShader( vertexShader );
+	int success;
+	glGetShaderiv( vertexShader, GL_COMPILE_STATUS, &success );
+	if( ! success )
+	{
+		char infoLog[512];
+		glGetShaderInfoLog( vertexShader, 512, NULL, infoLog );
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	};
+	glCompileShader( fragmentShader );
+	glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &success );
+	if( ! success )
+	{
+		char infoLog[512];
+		glGetShaderInfoLog( fragmentShader, 512, NULL, infoLog );
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	};
+	GLuint program = glCreateProgram();
+	glAttachShader( program, vertexShader );
+	glAttachShader( program, fragmentShader );
+	glLinkProgram( program );
+	glGetProgramiv( program, GL_LINK_STATUS, &success );
+	if( ! success )
+	{
+		char infoLog[512];
+		glGetProgramInfoLog( program, 512, NULL, infoLog );
+		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+	}
+	glDeleteShader( fragmentShader );
+	// TEXTURE UNIFORM LOCATIONS --------------------------------------------------------
+	GLint fbTexLocation = glGetUniformLocation( program, "FBTex" );
+	GLint overlayTexLocation = glGetUniformLocation( program, "OverlayTex" );
+	constexpr unsigned int fbTexUniformOffset = 0;
+	constexpr unsigned int overlayTexUniformOffset = 1;
 	// ----------------------------------------------------------------------------------
 
 	// Main loop
@@ -196,9 +257,9 @@ int main(int, char**)
 		// update texture
 		for ( unsigned int byte = 0; byte < data_width * data_height * 3; byte++ )
 		{
-			data[byte]++;
+			fbData[byte]++;
 		}
-		glBindTexture( GL_TEXTURE_2D, texture );
+		glBindTexture( GL_TEXTURE_2D, fbTex );
 		glTexSubImage2D(
 			GL_TEXTURE_2D,
 			0,
@@ -208,12 +269,19 @@ int main(int, char**)
 			data_height,
 			GL_RGB,
 			GL_UNSIGNED_BYTE,
-			data
+			fbData
 		);
+		glUseProgram( program );
+		glUniform1i( fbTexLocation, fbTexUniformOffset );
+		glUniform1i( overlayTexLocation, overlayTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, 0);
+		// render quad
 		// TODO need to get this from the Surface class
 		constexpr float aspectRatio = 640.0f / 480.0f;
-		glBindTexture( GL_TEXTURE_2D, texture );
+		glActiveTexture( GL_TEXTURE0 + fbTexUniformOffset );
+		glBindTexture( GL_TEXTURE_2D, fbTex );
+		glActiveTexture( GL_TEXTURE0 + overlayTexUniformOffset );
+		glBindTexture( GL_TEXTURE_2D, overlayTex );
 		glEnable( GL_TEXTURE_2D );
 		glBegin( GL_QUADS );
 		if ( display_w > display_h )
@@ -255,20 +323,12 @@ int main(int, char**)
 		}
 		glEnd();
 		glDisable( GL_TEXTURE_2D );
+		glActiveTexture( GL_TEXTURE0 + fbTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, 0 );
+		glActiveTexture( GL_TEXTURE0 + overlayTexUniformOffset );
+		glBindTexture( GL_TEXTURE_2D, 0 );
+		glUseProgram( 0 );
 		glFlush();
-		// glClear(GL_COLOR_BUFFER_BIT);
-		// glBindTexture(GL_TEXTURE_2D, texture);
-		// glEnable(GL_TEXTURE_2D);
-		// glBegin(GL_QUADS);
-		// glTexCoord2i(0, 0); glVertex2f(-1.0f, -1.0f);
-		// glTexCoord2i(0, 1); glVertex2f(-1.0f, 1.0f);
-		// glTexCoord2i(1, 1); glVertex2f(1.0f, 1.0f);
-		// glTexCoord2i(1, 0); glVertex2f(1.0f, -1.0f);
-		// glEnd();
-		// glDisable(GL_TEXTURE_2D);
-		// glBindTexture(GL_TEXTURE_2D, 0);
-		// glFlush();
 		// ---------------------------------------------------------
 		ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
 
