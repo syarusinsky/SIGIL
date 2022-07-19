@@ -60,9 +60,9 @@ endif
 
 ifeq ($(OS), Windows_NT)
 	ECHO_MESSAGE = "MinGW"
-	LIBS += -lglfw3 -lgdi32 -lopengl32 -limm32
+	LIBS += -lglew32 -lglfw3 -lgdi32 -lopengl32 -limm32
 
-	CXXFLAGS += `pkg-config --cflags glfw3`
+	CXXFLAGS += `pkg-config --cflags glew glfw3`
 	CFLAGS = $(CXXFLAGS)
 endif
 
