@@ -10,6 +10,8 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+#include "SurfaceTest.hpp"
+
 #include <string>
 
 #include <iostream>
@@ -102,19 +104,21 @@ int main(int, char**)
 	bool show_another_window = false;
 	ImVec4 clear_color = ImVec4( 0.45f, 0.55f, 0.60f, 1.00f );
 
+	// MY TEST SURFACE ------------------------------------------------------------------
+	initStuff();
+	SurfaceTest surface;
+	surface.loadMesh1( "./TestStuff/eric.obj" );
+	surface.loadMesh2( "./TestStuff/cube.obj" );
+	while( surface.render() ) {};
 	// MY TEXTURE LOADING CODE ----------------------------------------------------------
-	// TODO need to get this from the Surface class
-	constexpr unsigned int data_width = 640;
-	constexpr unsigned int data_height = 480;
-	uint8_t fbData[data_width * data_height * 3];
+	unsigned int data_width = surface.getWidth();
+	unsigned int data_height = surface.getHeight();
+	uint8_t* fbData = surface.advanceFrameBuffer().getPixels().data();
 	uint8_t overlayData[data_width * data_height * 3];
 	for ( unsigned int y = 0; y < data_height; y++ )
 	{
 		for ( unsigned int x = 0; x < data_width; x++ )
 		{
-			fbData[(((y * data_width) + x) * 3) + 0] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
-			fbData[(((y * data_width) + x) * 3) + 1] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
-			fbData[(((y * data_width) + x) * 3) + 2] = 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
 			overlayData[(((y * data_width) + x) * 3) + 0] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
 			overlayData[(((y * data_width) + x) * 3) + 1] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
 			overlayData[(((y * data_width) + x) * 3) + 2] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
@@ -142,7 +146,7 @@ int main(int, char**)
 		"\n"
 		"void main()\n"
 		"{\n"
-		"   FragColor = ( texture(FBTex, TexCoord) * 0.5 ) + ( texture(OverlayTex, TexCoord) * 0.5 );\n"
+		"   FragColor = ( texture(FBTex, TexCoord) * 1.0 ) + ( texture(OverlayTex, TexCoord) * 0.0 );\n"
 		"}";
 	GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
 	GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
@@ -255,10 +259,8 @@ int main(int, char**)
 		glClear( GL_COLOR_BUFFER_BIT );
 		// MY RENDER CODE ------------------------------------------
 		// update texture
-		for ( unsigned int byte = 0; byte < data_width * data_height * 3; byte++ )
-		{
-			fbData[byte]++;
-		}
+		while( surface.render() ) {}
+		fbData = surface.advanceFrameBuffer().getPixels().data();
 		glBindTexture( GL_TEXTURE_2D, fbTex );
 		glTexSubImage2D(
 			GL_TEXTURE_2D,

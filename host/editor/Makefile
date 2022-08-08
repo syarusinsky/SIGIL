@@ -16,15 +16,32 @@
 
 EXE = sigil_editor
 IMGUI_DIR = ../../lib/imgui
+SIGL_DIR = ../../lib/SIGL
 SOURCES = main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
+SOURCES += $(wildcard $(SIGL_DIR)/src/*.cpp)
+SOURCES += ./TestStuff/SurfaceTest.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
+INCLUDES = -I$(IMGUI_DIR)
+INCLUDES += -I$(IMGUI_DIR)/backends
+INCLUDES += -I$(SIGL_DIR)/include
+INCLUDES += -I./TestStuff
 
-CXXFLAGS = -std=c++17 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
-CXXFLAGS += -g -Wall -Wformat
+CXXFLAGS = $(INCLUDES)
+CXXFLAGS += -Ofast
+CXXFLAGS += -g
+CXXFLAGS += -funroll-loops
+CXXFLAGS += -fomit-frame-pointer
+CXXFLAGS += -finline
+CXXFLAGS += -fopenmp
+CXXFLAGS += -fno-exceptions
+CXXFLAGS += -march=x86-64
+CXXFLAGS += -mtune=generic
+CXXFLAGS += -mno-vzeroupper
+CXXFLAGS += -DSOFTWARE_RENDERING
 LIBS =
 
 ##---------------------------------------------------------------------
@@ -77,6 +94,12 @@ endif
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/backends/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+%.o:$(SIGL_DIR)/src/%.cpp
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+%.o:./TestStuff/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 all: $(EXE)
