@@ -40,6 +40,16 @@ Texture<CP_FORMAT::RGBA_32BIT>*     test_texture1_ptr = nullptr;
 char         test_texture2[TEXTURE_FILE_SIZE];
 Texture<CP_FORMAT::RGBA_32BIT>*     test_texture2_ptr = nullptr;
 
+inline void vShader (TriShaderData<CP_FORMAT::RGBA_32BIT>& vShaderData)
+{
+}
+
+inline void fShader (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT>& fShaderData, float v1Cur, float v2Cur, float v3Cur, float texCoordX,
+			float texCoordY, float lightAmnt)
+{
+	colorOut = fShaderData.textures[0]->getColor( texCoordX, texCoordY ) * lightAmnt;
+}
+
 void initStuff()
 {
 	unsigned int nSize = FONT_FILE_SIZE;
@@ -339,14 +349,6 @@ void SurfaceTest::draw (SoftwareGraphics<640, 480, CP_FORMAT::RGB_24BIT, NUM_THR
 	// draw cube
 	std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray1 = { test_texture1_ptr };
 	std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray2 = { test_texture2_ptr };
-	void (*vShader)(TriShaderData<CP_FORMAT::RGBA_32BIT>& vShaderData) = [](TriShaderData<CP_FORMAT::RGBA_32BIT>& vShaderData) {};
-	void (*fShader)(Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT>& fShaderData, float v1Cur, float v2Cur, float v3Cur, float texCoordX,
-			float texCoordY, float lightAmnt)
-				= [] (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT>& fShaderData, float v1Cur, float v2Cur, float v3Cur,
-					float texCoordX, float texCoordY, float lightAmnt)
-					{
-						colorOut = fShaderData.textures[0]->getColor( texCoordX, texCoordY ) * lightAmnt;
-					};
 	float aspectRatio = static_cast<float>(this->getWidth()) / static_cast<float>(this->getHeight());
 	Camera3D camera( 0.01f, 10.0f, 60.0f, aspectRatio );
 	Mesh model1 = m_Mesh1;

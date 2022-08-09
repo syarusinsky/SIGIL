@@ -42,6 +42,7 @@ CXXFLAGS += -march=x86-64
 CXXFLAGS += -mtune=generic
 CXXFLAGS += -mno-vzeroupper
 CXXFLAGS += -DSOFTWARE_RENDERING
+CXXFLAGS += --param max-inline-insns-single=1000 # lets go crazy with the inlining
 LIBS =
 
 ##---------------------------------------------------------------------

@@ -80,7 +80,7 @@ int main(int, char**)
 		return 1;
 	}
 	glfwMakeContextCurrent( window );
-	glfwSwapInterval( 1 ); // Enable vsync
+	// glfwSwapInterval( 1 ); // Enable vsync
 
 	glewInit();
 
