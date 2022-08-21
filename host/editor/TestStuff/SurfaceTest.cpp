@@ -40,12 +40,12 @@ Texture<CP_FORMAT::RGBA_32BIT>*     test_texture1_ptr = nullptr;
 char         test_texture2[TEXTURE_FILE_SIZE];
 Texture<CP_FORMAT::RGBA_32BIT>*     test_texture2_ptr = nullptr;
 
-inline void vShader (TriShaderData<CP_FORMAT::RGBA_32BIT>& vShaderData)
+inline void vShader (TriShaderData<CP_FORMAT::RGBA_32BIT, SHADER_PASS_DATA_SIZE>& vShaderData)
 {
 }
 
-inline void fShader (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT>& fShaderData, float v1Cur, float v2Cur, float v3Cur, float texCoordX,
-			float texCoordY, float lightAmnt)
+inline void fShader (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, SHADER_PASS_DATA_SIZE>& fShaderData, float v1Cur, float v2Cur, float v3Cur,
+			float texCoordX, float texCoordY, float lightAmnt)
 {
 	colorOut = fShaderData.textures[0]->getColor( texCoordX, texCoordY ) * lightAmnt;
 }
@@ -138,7 +138,7 @@ void SurfaceTest::loadMesh2 (const std::string& filePath)
 	}
 }
 
-void SurfaceTest::draw (SoftwareGraphics<640, 480, CP_FORMAT::RGB_24BIT, NUM_THREADS>* graphics)
+void SurfaceTest::draw (SoftwareGraphics<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PASS_DATA_SIZE>* graphics)
 {
 	graphics->setColor( 0.0f, 0.0f, 0.0f );
 	graphics->fill();
@@ -359,8 +359,8 @@ void SurfaceTest::draw (SoftwareGraphics<640, 480, CP_FORMAT::RGB_24BIT, NUM_THR
 	static float xTranslateIncr = 0.01f;
 	static float xRotation = 0.0f;
 	static float xRotationIncr = 1.0f;
-	TriShaderData<CP_FORMAT::RGBA_32BIT> shaderData1{ texArray1, camera, Color(), nullptr, vShader, fShader };
-	TriShaderData<CP_FORMAT::RGBA_32BIT> shaderData2{ texArray2, camera, Color(), nullptr, vShader, fShader };
+	TriShaderData<CP_FORMAT::RGBA_32BIT, SHADER_PASS_DATA_SIZE> shaderData1{ texArray1, camera, Color(), nullptr, vShader, fShader };
+	TriShaderData<CP_FORMAT::RGBA_32BIT, SHADER_PASS_DATA_SIZE> shaderData2{ texArray2, camera, Color(), nullptr, vShader, fShader };
 	model1.rotate( 180.0f, xRotation, 0.0f );
 	model2.rotate( xRotation, xRotation * 0.5f, 0.0f );
 	model1.translate( 0.0f, 0.0f, 2.5f );

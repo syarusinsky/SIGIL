@@ -4,10 +4,11 @@
 #include "Surface.hpp"
 
 #define NUM_THREADS 4
+#define SHADER_PASS_DATA_SIZE 1024
 
 void initStuff();
 
-class SurfaceTest : public Surface<640, 480, CP_FORMAT::RGB_24BIT, NUM_THREADS>
+class SurfaceTest : public Surface<640, 480, CP_FORMAT::RGB_24BIT, NUM_THREADS, true, SHADER_PASS_DATA_SIZE>
 {
 	public:
 		SurfaceTest();
@@ -16,7 +17,7 @@ class SurfaceTest : public Surface<640, 480, CP_FORMAT::RGB_24BIT, NUM_THREADS>
 		void loadMesh1 (const std::string& filePath);
 		void loadMesh2 (const std::string& filePath);
 
-		void draw(SoftwareGraphics<640, 480, CP_FORMAT::RGB_24BIT, NUM_THREADS>* graphics) override;
+		void draw(SoftwareGraphics<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PASS_DATA_SIZE>* graphics) override;
 
 	private:
 		Mesh m_Mesh1;
