@@ -2,11 +2,6 @@
 
 #include <math.h>
 
-#ifdef SOFTWARE_GRAPHICS
-#include "SoftwareGraphics.hpp"
-#else
-#include "SoftwareGraphics.hpp" // TODO if I ever implement hardware acceleration, this needs to change
-#endif
 #include "Sprite.hpp"
 #include "Engine3D.hpp"
 #include "Texture.hpp"
@@ -138,7 +133,7 @@ void SurfaceTest::loadMesh2 (const std::string& filePath)
 	}
 }
 
-void SurfaceTest::draw (SoftwareGraphics<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PASS_DATA_SIZE>* graphics)
+void SurfaceTest::draw (GRAPHICS<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PASS_DATA_SIZE>* graphics)
 {
 	graphics->setColor( 0.0f, 0.0f, 0.0f );
 	graphics->fill();

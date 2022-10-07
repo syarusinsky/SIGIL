@@ -278,8 +278,7 @@ int main(int, char**)
 		glUniform1i( overlayTexLocation, overlayTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, 0);
 		// render quad
-		// TODO need to get this from the Surface class
-		constexpr float aspectRatio = 640.0f / 480.0f;
+		constexpr float aspectRatio = static_cast<float>( surface.getWidth() ) / static_cast<float>( surface.getHeight() );
 		glActiveTexture( GL_TEXTURE0 + fbTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, fbTex );
 		glActiveTexture( GL_TEXTURE0 + overlayTexUniformOffset );
