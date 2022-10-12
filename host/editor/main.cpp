@@ -113,19 +113,11 @@ int main(int, char**)
 	// MY TEXTURE LOADING CODE ----------------------------------------------------------
 	unsigned int data_width = surface.getWidth();
 	unsigned int data_height = surface.getHeight();
+	// TODO give an opengl version
 	uint8_t* fbData = surface.advanceFrameBuffer().getPixels().data();
-	uint8_t overlayData[data_width * data_height * 3];
-	for ( unsigned int y = 0; y < data_height; y++ )
-	{
-		for ( unsigned int x = 0; x < data_width; x++ )
-		{
-			overlayData[(((y * data_width) + x) * 3) + 0] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
-			overlayData[(((y * data_width) + x) * 3) + 1] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
-			overlayData[(((y * data_width) + x) * 3) + 2] = 255.0f - 255.0f * static_cast<float>( static_cast<float>(y) / data_height );
-		}
-	}
+	// TODO here, for opengl version we should just use the texture supplied by the opengl framebuffer
 	GLuint fbTex = loadTexture( fbData, data_width, data_height );
-	GLuint overlayTex = loadTexture( overlayData, data_width, data_height );
+	// GLuint fbTex = surface.advanceFrameBuffer().getTexture();
 	// MY SHADER CODE -------------------------------------------------------------------
 	const char* vertexShaderCStr =
 		"#version 120\n"
@@ -142,11 +134,10 @@ int main(int, char**)
 		"\n"
 		"varying vec2 TexCoord;\n"
 		"uniform sampler2D FBTex;\n"
-		"uniform sampler2D OverlayTex;\n"
 		"\n"
 		"void main()\n"
 		"{\n"
-		"   FragColor = ( texture(FBTex, TexCoord) * 1.0 ) + ( texture(OverlayTex, TexCoord) * 0.0 );\n"
+		"   FragColor = texture(FBTex, TexCoord);\n"
 		"}";
 	GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
 	GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
@@ -183,9 +174,7 @@ int main(int, char**)
 	glDeleteShader( fragmentShader );
 	// TEXTURE UNIFORM LOCATIONS --------------------------------------------------------
 	GLint fbTexLocation = glGetUniformLocation( program, "FBTex" );
-	GLint overlayTexLocation = glGetUniformLocation( program, "OverlayTex" );
 	constexpr unsigned int fbTexUniformOffset = 0;
-	constexpr unsigned int overlayTexUniformOffset = 1;
 	// ----------------------------------------------------------------------------------
 
 	// Main loop
@@ -260,8 +249,10 @@ int main(int, char**)
 		// MY RENDER CODE ------------------------------------------
 		// update texture
 		while( surface.render() ) {}
+		// TODO define an opengl version
 		fbData = surface.advanceFrameBuffer().getPixels().data();
 		glBindTexture( GL_TEXTURE_2D, fbTex );
+		// TODO only need this for software rendered version
 		glTexSubImage2D(
 			GL_TEXTURE_2D,
 			0,
@@ -275,14 +266,11 @@ int main(int, char**)
 		);
 		glUseProgram( program );
 		glUniform1i( fbTexLocation, fbTexUniformOffset );
-		glUniform1i( overlayTexLocation, overlayTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, 0);
 		// render quad
 		constexpr float aspectRatio = static_cast<float>( surface.getWidth() ) / static_cast<float>( surface.getHeight() );
 		glActiveTexture( GL_TEXTURE0 + fbTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, fbTex );
-		glActiveTexture( GL_TEXTURE0 + overlayTexUniformOffset );
-		glBindTexture( GL_TEXTURE_2D, overlayTex );
 		glEnable( GL_TEXTURE_2D );
 		glBegin( GL_QUADS );
 		if ( display_w > display_h )
@@ -325,8 +313,6 @@ int main(int, char**)
 		glEnd();
 		glDisable( GL_TEXTURE_2D );
 		glActiveTexture( GL_TEXTURE0 + fbTexUniformOffset );
-		glBindTexture( GL_TEXTURE_2D, 0 );
-		glActiveTexture( GL_TEXTURE0 + overlayTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, 0 );
 		glUseProgram( 0 );
 		glFlush();

@@ -133,7 +133,7 @@ void SurfaceTest::loadMesh2 (const std::string& filePath)
 	}
 }
 
-void SurfaceTest::draw (GRAPHICS<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PASS_DATA_SIZE>* graphics)
+void SurfaceTest::draw (GRAPHICS<640, 480, CP_FORMAT::RGB_24BIT, false, SHADER_PASS_DATA_SIZE>* graphics)
 {
 	graphics->setColor( 0.0f, 0.0f, 0.0f );
 	graphics->fill();
@@ -372,7 +372,7 @@ void SurfaceTest::draw (GRAPHICS<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PA
 		face.vertices[1].normal = face.vertices[1].normal * model1.transformMat;
 		face.vertices[2].normal = face.vertices[2].normal * model1.transformMat;
 
-		graphics->drawTriangleShaded( face, shaderData1 );
+		// graphics->drawTriangleShaded( face, shaderData1 );
 	}
 
 	for ( Face face : model2.faces )
@@ -385,7 +385,7 @@ void SurfaceTest::draw (GRAPHICS<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PA
 		face.vertices[1].normal = face.vertices[1].normal * model2.transformMat;
 		face.vertices[2].normal = face.vertices[2].normal * model2.transformMat;
 
-		graphics->drawTriangleShaded( face, shaderData2 );
+		// graphics->drawTriangleShaded( face, shaderData2 );
 	}
 
 	xTranslate += xTranslateIncr;
