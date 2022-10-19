@@ -114,10 +114,10 @@ int main(int, char**)
 	unsigned int data_width = surface.getWidth();
 	unsigned int data_height = surface.getHeight();
 	// TODO give an opengl version
-	uint8_t* fbData = surface.advanceFrameBuffer().getPixels().data();
+	// uint8_t* fbData = surface.advanceFrameBuffer().getPixels().data();
 	// TODO here, for opengl version we should just use the texture supplied by the opengl framebuffer
-	GLuint fbTex = loadTexture( fbData, data_width, data_height );
-	// GLuint fbTex = surface.advanceFrameBuffer().getTexture();
+	// GLuint fbTex = loadTexture( fbData, data_width, data_height );
+	GLuint fbTex = surface.advanceFrameBuffer().getTexture();
 	// MY SHADER CODE -------------------------------------------------------------------
 	const char* vertexShaderCStr =
 		"#version 120\n"
@@ -250,20 +250,20 @@ int main(int, char**)
 		// update texture
 		while( surface.render() ) {}
 		// TODO define an opengl version
-		fbData = surface.advanceFrameBuffer().getPixels().data();
+		// fbData = surface.advanceFrameBuffer().getPixels().data();
 		glBindTexture( GL_TEXTURE_2D, fbTex );
 		// TODO only need this for software rendered version
-		glTexSubImage2D(
-			GL_TEXTURE_2D,
-			0,
-			0,
-			0,
-			data_width,
-			data_height,
-			GL_RGB,
-			GL_UNSIGNED_BYTE,
-			fbData
-		);
+		// glTexSubImage2D(
+		// 	GL_TEXTURE_2D,
+		// 	0,
+		// 	0,
+		// 	0,
+		// 	data_width,
+		// 	data_height,
+		// 	GL_RGB,
+		// 	GL_UNSIGNED_BYTE,
+		// 	fbData
+		// );
 		glUseProgram( program );
 		glUniform1i( fbTexLocation, fbTexUniformOffset );
 		glBindTexture( GL_TEXTURE_2D, 0);
