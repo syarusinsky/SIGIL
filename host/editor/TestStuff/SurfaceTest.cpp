@@ -133,7 +133,7 @@ void SurfaceTest::loadMesh2 (const std::string& filePath)
 	}
 }
 
-void SurfaceTest::draw (GRAPHICS_API<640, 480, CP_FORMAT::RGB_24BIT, RENDER_API::SOFTWARE, true, SHADER_PASS_DATA_SIZE>* graphics)
+void SurfaceTest::draw (Graphics<640, 480, CP_FORMAT::RGB_24BIT, RENDER_API::SOFTWARE, true, SHADER_PASS_DATA_SIZE>* graphics)
 {
 	graphics->setColor( 0.0f, 0.0f, 0.0f );
 	graphics->fill();
