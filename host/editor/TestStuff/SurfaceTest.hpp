@@ -8,7 +8,7 @@
 
 void initStuff();
 
-class SurfaceTest : public Surface<RENDER_API::SOFTWARE, 640, 480, CP_FORMAT::RGB_24BIT, NUM_THREADS, true, SHADER_PASS_DATA_SIZE>
+class SurfaceTest : public Surface<RENDER_API::SOFTWARE, 640, 480, CP_FORMAT::RGB_24BIT, NUM_THREADS, false, SHADER_PASS_DATA_SIZE>
 {
 	public:
 		SurfaceTest();
@@ -17,7 +17,7 @@ class SurfaceTest : public Surface<RENDER_API::SOFTWARE, 640, 480, CP_FORMAT::RG
 		void loadMesh1 (const std::string& filePath);
 		void loadMesh2 (const std::string& filePath);
 
-		void draw(Graphics<640, 480, CP_FORMAT::RGB_24BIT, RENDER_API::SOFTWARE, true, SHADER_PASS_DATA_SIZE>* graphics) override;
+		void draw(Graphics<640, 480, CP_FORMAT::RGB_24BIT, RENDER_API::SOFTWARE, false, SHADER_PASS_DATA_SIZE>* graphics) override;
 
 	private:
 		Mesh m_Mesh1;
