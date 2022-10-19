@@ -3,7 +3,7 @@
 
 #include "Surface.hpp"
 
-#define NUM_THREADS 4
+#define NUM_THREADS 1
 #define SHADER_PASS_DATA_SIZE 1024
 
 #ifdef SOFTWARE_RENDERING
@@ -23,7 +23,7 @@ class SurfaceTest : public Surface<RENDER_API::SOFTWARE, 640, 480, CP_FORMAT::RG
 		void loadMesh1 (const std::string& filePath);
 		void loadMesh2 (const std::string& filePath);
 
-		void draw(GRAPHICS_API<640, 480, CP_FORMAT::RGB_24BIT, true, SHADER_PASS_DATA_SIZE>* graphics) override;
+		void draw(GRAPHICS_API<640, 480, CP_FORMAT::RGB_24BIT, RENDER_API::SOFTWARE, true, SHADER_PASS_DATA_SIZE>* graphics) override;
 
 	private:
 		Mesh m_Mesh1;
