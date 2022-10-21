@@ -10,7 +10,7 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
-#include "SurfaceTest.hpp"
+#include "SurfaceHandler.hpp"
 
 #include <string>
 
@@ -22,19 +22,6 @@
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
 #endif
-
-GLuint loadTexture (uint8_t* data, unsigned int data_width, unsigned int data_height)
-{
-	GLuint texture;
-	glGenTextures( 1, &texture );
-	glBindTexture( GL_TEXTURE_2D, texture );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB8, data_width, data_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data );
-	glBindTexture( GL_TEXTURE_2D, 0 );
-
-	return texture;
-}
 
 static void glfw_error_callback(int error, const char* description)
 {
@@ -105,76 +92,7 @@ int main(int, char**)
 	ImVec4 clear_color = ImVec4( 0.45f, 0.55f, 0.60f, 1.00f );
 
 	// MY TEST SURFACE ------------------------------------------------------------------
-	initStuff();
-	SurfaceTest surface;
-	surface.loadMesh1( "./TestStuff/eric.obj" );
-	surface.loadMesh2( "./TestStuff/cube.obj" );
-	while( surface.render() ) {};
-	// MY TEXTURE LOADING CODE ----------------------------------------------------------
-	unsigned int data_width = surface.getWidth();
-	unsigned int data_height = surface.getHeight();
-	// TODO give an opengl version
-	// uint8_t* fbData = surface.advanceFrameBuffer().getPixels().data();
-	// TODO here, for opengl version we should just use the texture supplied by the opengl framebuffer
-	// GLuint fbTex = loadTexture( fbData, data_width, data_height );
-	GLuint fbTex = surface.advanceFrameBuffer().getTexture();
-	// MY SHADER CODE -------------------------------------------------------------------
-	const char* vertexShaderCStr =
-		"#version 120\n"
-		"varying vec2 TexCoord;\n"
-		"\n"
-		"void main()\n"
-		"{\n"
-		"   gl_Position = gl_Vertex;\n"
-		"   TexCoord = gl_MultiTexCoord0.xy;\n"
-		"}";
-	const char* fragmentShaderCStr =
-		"#version 330\n"
-		"out vec4 FragColor;\n"
-		"\n"
-		"varying vec2 TexCoord;\n"
-		"uniform sampler2D FBTex;\n"
-		"\n"
-		"void main()\n"
-		"{\n"
-		"   FragColor = texture(FBTex, TexCoord);\n"
-		"}";
-	GLuint vertexShader = glCreateShader( GL_VERTEX_SHADER );
-	GLuint fragmentShader = glCreateShader( GL_FRAGMENT_SHADER );
-	glShaderSource( vertexShader, 1, &vertexShaderCStr, NULL );
-	glShaderSource( fragmentShader, 1, &fragmentShaderCStr, NULL );
-	glCompileShader( vertexShader );
-	int success;
-	glGetShaderiv( vertexShader, GL_COMPILE_STATUS, &success );
-	if( ! success )
-	{
-		char infoLog[512];
-		glGetShaderInfoLog( vertexShader, 512, NULL, infoLog );
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-	};
-	glCompileShader( fragmentShader );
-	glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &success );
-	if( ! success )
-	{
-		char infoLog[512];
-		glGetShaderInfoLog( fragmentShader, 512, NULL, infoLog );
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	};
-	GLuint program = glCreateProgram();
-	glAttachShader( program, vertexShader );
-	glAttachShader( program, fragmentShader );
-	glLinkProgram( program );
-	glGetProgramiv( program, GL_LINK_STATUS, &success );
-	if( ! success )
-	{
-		char infoLog[512];
-		glGetProgramInfoLog( program, 512, NULL, infoLog );
-		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-	glDeleteShader( fragmentShader );
-	// TEXTURE UNIFORM LOCATIONS --------------------------------------------------------
-	GLint fbTexLocation = glGetUniformLocation( program, "FBTex" );
-	constexpr unsigned int fbTexUniformOffset = 0;
+	SurfaceHandler<RENDER_API::OPENGL, 640, 480, CP_FORMAT::RGB_24BIT, 1, true, 1024> surface;
 	// ----------------------------------------------------------------------------------
 
 	// Main loop
@@ -247,75 +165,7 @@ int main(int, char**)
 		glClearColor( clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w );
 		glClear( GL_COLOR_BUFFER_BIT );
 		// MY RENDER CODE ------------------------------------------
-		// update texture
-		while( surface.render() ) {}
-		// TODO define an opengl version
-		// fbData = surface.advanceFrameBuffer().getPixels().data();
-		glBindTexture( GL_TEXTURE_2D, fbTex );
-		// TODO only need this for software rendered version
-		// glTexSubImage2D(
-		// 	GL_TEXTURE_2D,
-		// 	0,
-		// 	0,
-		// 	0,
-		// 	data_width,
-		// 	data_height,
-		// 	GL_RGB,
-		// 	GL_UNSIGNED_BYTE,
-		// 	fbData
-		// );
-		glUseProgram( program );
-		glUniform1i( fbTexLocation, fbTexUniformOffset );
-		glBindTexture( GL_TEXTURE_2D, 0);
-		// render quad
-		constexpr float aspectRatio = static_cast<float>( surface.getWidth() ) / static_cast<float>( surface.getHeight() );
-		glActiveTexture( GL_TEXTURE0 + fbTexUniformOffset );
-		glBindTexture( GL_TEXTURE_2D, fbTex );
-		glEnable( GL_TEXTURE_2D );
-		glBegin( GL_QUADS );
-		if ( display_w > display_h )
-		{
-			float width = display_h * aspectRatio;
-			float pos_w = width / display_w;
-			glTexCoord2i( 0, 1 );
-			glVertex2f( -pos_w, -1.0f );
-			glTexCoord2i( 1, 1 );
-			glVertex2f( pos_w, -1.0f );
-			glTexCoord2i( 1, 0 );
-			glVertex2f( pos_w, 1.0f );
-			glTexCoord2i( 0, 0 );
-			glVertex2f( -pos_w, 1.0f );
-		}
-		else if( display_h > display_w )
-		{
-			float height = display_w / aspectRatio;
-			float pos_h = height / display_h;
-			glTexCoord2i( 0, 1 );
-			glVertex2f( -1.0f, -pos_h );
-			glTexCoord2i( 1, 1 );
-			glVertex2f( 1.0f, -pos_h );
-			glTexCoord2i( 1, 0 );
-			glVertex2f( 1.0f, pos_h );
-			glTexCoord2i( 0, 0 );
-			glVertex2f( -1.0f, pos_h );
-		}
-		else // display_w == display_h
-		{
-			glTexCoord2i( 0, 1 );
-			glVertex2f( -1.0f, -1.0f );
-			glTexCoord2i( 1, 1 );
-			glVertex2f( 1.0f, -1.0f );
-			glTexCoord2i( 1, 0 );
-			glVertex2f( 1.0f, 1.0f );
-			glTexCoord2i( 0, 0 );
-			glVertex2f( -1.0f, 1.0f );
-		}
-		glEnd();
-		glDisable( GL_TEXTURE_2D );
-		glActiveTexture( GL_TEXTURE0 + fbTexUniformOffset );
-		glBindTexture( GL_TEXTURE_2D, 0 );
-		glUseProgram( 0 );
-		glFlush();
+		surface.render( display_w, display_h );
 		// ---------------------------------------------------------
 		ImGui_ImplOpenGL3_RenderDrawData( ImGui::GetDrawData() );
 
