@@ -22,6 +22,7 @@ SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
 SOURCES += $(wildcard $(SIGL_DIR)/src/*.cpp)
 SOURCES += ./TestStuff/SurfaceTest.cpp
+SOURCES += ./TestStuff/SurfaceHandler.cpp
 OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
@@ -87,26 +88,26 @@ endif
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-%.o:%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+%.o:%.cpp %.hpp 
+	$(CXX) $(CXXFLAGS) -MMD -MP -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -MMD -MP -c -o $@ $<
 
 %.o:$(IMGUI_DIR)/backends/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -MMD -MP -c -o $@ $<
 
-%.o:$(SIGL_DIR)/src/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+%.o:$(SIGL_DIR)/src/%.cpp $(SIGL_DIR)/include/%.hpp
+	$(CXX) $(CXXFLAGS) -MMD -MP -c -o $@ $<
 
-%.o:./TestStuff/%.cpp
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+%.o:./TestStuff/%.cpp ./TestStuff/%.hpp
+	$(CXX) $(CXXFLAGS) -MMD -MP -c -o $@ $<
 
 all: $(EXE)
 	@echo Build complete for $(ECHO_MESSAGE)
 
 $(EXE): $(OBJS)
-	$(CXX) -o $@ $^ $(CXXFLAGS) $(LIBS)
+	$(CXX) -MMD -MP -o $@ $^ $(CXXFLAGS) $(LIBS)
 
 clean:
-	rm -f $(EXE) $(OBJS)
+	rm -f $(EXE) $(OBJS) $(addsuffix .d, $(basename $(notdir $(SOURCES))))

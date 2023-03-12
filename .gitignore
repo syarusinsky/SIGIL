@@ -2,3 +2,4 @@
 *.ini
 sigil_editor
 sigil_editor.exe
+/build
