@@ -24,8 +24,8 @@ class SurfaceHandler
 			m_Surface.setOnlyFont();
 			m_Surface.setMeshVShader( vShader );
 			m_Surface.setMeshFShader( fShader );
-			m_Surface.loadMesh1( "./TestStuff/eric.obj" );
-			m_Surface.loadMesh2( "./TestStuff/cube.obj" );
+			m_Surface.loadMesh1( "../../host/editor/TestStuff/eric.obj" );
+			m_Surface.loadMesh2( "../../host/editor/TestStuff/cube.obj" );
 
 			while( m_Surface.render() ) {}
 

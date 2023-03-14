@@ -29,7 +29,7 @@ void initStuff()
 {
 	unsigned int nSize = FONT_FILE_SIZE;
 	std::ifstream fontFile;
-	fontFile.open( "./TestStuff/Smoll.sff" );
+	fontFile.open( "../../host/editor/TestStuff/Smoll.sff" );
 	fontFile.read( my_font, nSize );
 	fontFile.close();
 
@@ -37,7 +37,7 @@ void initStuff()
 
 	nSize = SPRITE_FILE_SIZE;
 	std::ifstream spriteFile;
-	spriteFile.open( "./TestStuff/TestImage.sif" );
+	spriteFile.open( "../../host/editor/TestStuff/TestImage.sif" );
 	spriteFile.read( test_sprite, nSize );
 	spriteFile.close();
 
@@ -45,13 +45,13 @@ void initStuff()
 
 	nSize = TEXTURE_FILE_SIZE;
 	std::ifstream textureFile1;
-	textureFile1.open( "./TestStuff/eric.sif" );
+	textureFile1.open( "../../host/editor/TestStuff/eric.sif" );
 	textureFile1.read( test_texture1, nSize );
 	textureFile1.close();
 
 	nSize = TEXTURE_FILE_SIZE;
 	std::ifstream textureFile2;
-	textureFile2.open( "./TestStuff/box-texture.sif" );
+	textureFile2.open( "../../host/editor/TestStuff/box-texture.sif" );
 	textureFile2.read( test_texture2, nSize );
 	textureFile2.close();
 

@@ -368,7 +368,7 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 		face.vertices[1].normal = face.vertices[1].normal * model1.transformMat;
 		face.vertices[2].normal = face.vertices[2].normal * model1.transformMat;
 
-		// graphics->drawTriangleShaded( face, shaderData1 );
+		graphics->drawTriangleShaded( face, shaderData1 );
 	}
 
 	for ( Face face : model2.faces )
@@ -381,7 +381,7 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 		face.vertices[1].normal = face.vertices[1].normal * model2.transformMat;
 		face.vertices[2].normal = face.vertices[2].normal * model2.transformMat;
 
-		// graphics->drawTriangleShaded( face, shaderData2 );
+		graphics->drawTriangleShaded( face, shaderData2 );
 	}
 
 	xTranslate += xTranslateIncr;
