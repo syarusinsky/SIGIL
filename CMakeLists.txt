@@ -26,6 +26,8 @@ set( CXX_AND_C_FLAGS
 set( COMMON_CXX_FLAGS ${CXX_AND_C_FLAGS} )
 set( COMMON_C_FLAGS ${CXX_AND_C_FLAGS} )
 
+set( CMAKE_VERBOSE_MAKEFILE true )
+
 # DEFINITIONS
 # add_definitions( -DSOME_DEF=1 )
 
@@ -63,11 +65,14 @@ if ( WIN32 )
 	pkg_check_modules( GLEW REQUIRED glew )
 	pkg_check_modules( GLFW3 REQUIRED glfw3 )
 
+	find_package( OpenGL REQUIRED )
+
 	set( INCLUDE_DIRS
 		${INCLUDE_DIRS}
 
 		${GLEW_INCLUDE_DIRS}
 		${GLFW3_INCLUDE_DIRS}
+		${OPENGL_INCLUDE_DIRS}
 	)
 
 	set( LIBRARIES_TO_LINK
@@ -75,6 +80,7 @@ if ( WIN32 )
 
 		${GLEW_LIBRARIES}
 		${GLFW3_LIBRARIES}
+		${OPENGL_LIBRARIES}
 	)
 
 	set( OS_DEPENDENT_LINK_OPTIONS
@@ -216,3 +222,5 @@ set_property( TARGET
 	PROPERTY RUNTIME_OUTPUT_DIRECTORY
 	${CMAKE_BINARY_DIR}/bin
 )
+
+
