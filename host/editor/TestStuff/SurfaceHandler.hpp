@@ -9,6 +9,8 @@
 
 #include "SurfaceTest.hpp"
 
+void printGLError();
+
 template <RENDER_API api, unsigned int width, unsigned int height, CP_FORMAT format, unsigned int numThreads, bool include3D,
 	unsigned int shaderPassDataSize>
 class SurfaceHandler
@@ -49,7 +51,7 @@ class SurfaceHandler
 				"}";
 			const char* fragmentShaderCStr =
 				"#version 330\n"
-				"out vec4 FragColor;\n"
+				"layout (location = 0) out vec4 FragColor;\n"
 				"\n"
 				"varying vec2 TexCoord;\n"
 				"uniform sampler2D FBTex;\n"
@@ -79,21 +81,21 @@ class SurfaceHandler
 				glGetShaderInfoLog( fragmentShader, 512, NULL, infoLog );
 				std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 			};
-			GLuint program = glCreateProgram();
-			glAttachShader( program, vertexShader );
-			glAttachShader( program, fragmentShader );
-			glLinkProgram( program );
-			glGetProgramiv( program, GL_LINK_STATUS, &success );
+			m_FBProgram = glCreateProgram();
+			glAttachShader( m_FBProgram, vertexShader );
+			glAttachShader( m_FBProgram, fragmentShader );
+			glLinkProgram( m_FBProgram );
+			glGetProgramiv( m_FBProgram, GL_LINK_STATUS, &success );
 			if( ! success )
 			{
 				char infoLog[512];
-				glGetProgramInfoLog( program, 512, NULL, infoLog );
+				glGetProgramInfoLog( m_FBProgram, 512, NULL, infoLog );
 				std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
 			}
 			glDeleteShader( vertexShader );
 			glDeleteShader( fragmentShader );
 
-			m_FBTexLocation = glGetUniformLocation( program, "FBTex" );
+			m_FBTexLocation = glGetUniformLocation( m_FBProgram, "FBTex" );
 		}
 
 		void render (int display_w, int display_h)
@@ -117,13 +119,15 @@ class SurfaceHandler
 			}
 			else if constexpr ( api == RENDER_API::OPENGL )
 			{
+				// since m_Surface.render may change the viewport as it draws to the texture
+				glViewport( 0, 0, display_w, display_h );
+
 				m_FBTex = m_Surface.advanceFrameBuffer().getTexture();
 				glBindTexture( GL_TEXTURE_2D, m_FBTex );
 			}
 
 			glUseProgram( m_FBProgram );
 			glUniform1i( m_FBTexLocation, 0 );
-			glBindTexture( GL_TEXTURE_2D, 0 );
 
 			constexpr float aspectRatio = static_cast<float>( width ) / static_cast<float>( height );
 			glActiveTexture( GL_TEXTURE0 );
@@ -134,37 +138,121 @@ class SurfaceHandler
 			{
 				float w = display_h * aspectRatio;
 				float pos_w = w / display_w;
-				glTexCoord2i( 0, 1 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 0, 0 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 0, 1 );
+				}
 				glVertex2f( -pos_w, -1.0f );
-				glTexCoord2i( 1, 1 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 1, 0 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 1, 1 );
+				}
 				glVertex2f( pos_w, -1.0f );
-				glTexCoord2i( 1, 0 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 1, 1 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 1, 0 );
+				}
 				glVertex2f( pos_w, 1.0f );
-				glTexCoord2i( 0, 0 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 0, 1 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 0, 0 );
+				}
 				glVertex2f( -pos_w, 1.0f );
 			}
 			else if( display_h > display_w )
 			{
 				float h = display_w / aspectRatio;
 				float pos_h = h / display_h;
-				glTexCoord2i( 0, 1 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 0, 0 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 0, 1 );
+				}
 				glVertex2f( -1.0f, -pos_h );
-				glTexCoord2i( 1, 1 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 1, 0 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 1, 1 );
+				}
 				glVertex2f( 1.0f, -pos_h );
-				glTexCoord2i( 1, 0 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 1, 1 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 1, 0 );
+				}
 				glVertex2f( 1.0f, pos_h );
-				glTexCoord2i( 0, 0 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 0, 1 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 0, 0 );
+				}
 				glVertex2f( -1.0f, pos_h );
 			}
 			else // display_w == display_h
 			{
-				glTexCoord2i( 0, 1 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 0, 0 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 0, 1 );
+				}
 				glVertex2f( -1.0f, -1.0f );
-				glTexCoord2i( 1, 1 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 1, 0 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 1, 1 );
+				}
 				glVertex2f( 1.0f, -1.0f );
-				glTexCoord2i( 1, 0 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 1, 1 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 1, 0 );
+				}
 				glVertex2f( 1.0f, 1.0f );
-				glTexCoord2i( 0, 0 );
+				if constexpr ( api == RENDER_API::OPENGL )
+				{
+					glTexCoord2i( 0, 1 );
+				}
+				else if constexpr ( api == RENDER_API::SOFTWARE )
+				{
+					glTexCoord2i( 0, 0 );
+				}
 				glVertex2f( -1.0f, 1.0f );
 			}
 			glEnd();
@@ -179,7 +267,7 @@ class SurfaceHandler
 		{
 		}
 
-		static void fShader (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& fShaderData, float v1Cur, float v2Cur, 
+		static void fShader (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& fShaderData, float v1Cur, float v2Cur,
 				float v3Cur, float texCoordX, float texCoordY, float lightAmnt)
 		{
 			colorOut = fShaderData.textures[0]->getColor( texCoordX, texCoordY ) * lightAmnt;
