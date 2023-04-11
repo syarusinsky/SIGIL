@@ -143,8 +143,8 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	// graphics->setColor( 0.0f, 0.0f, 1.0f );
 	// graphics->drawLine( 0.8f, 1.1f, xOffset, 0.1f );
 
-	// static float blue = 0.1f;
-	// graphics->setColor( 0.73f, 0.56f, blue );
+	static float blue = 0.1f;
+	graphics->setColor( 0.73f, 0.56f, blue );
 
 	// static bool flip = false;
 	// if (!flip)
@@ -194,9 +194,9 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 
 	// graphics->drawTriangle ( 0.1f, 0.4f, 0.0f, 0.2f, 0.0f, 0.6f );
 
-	// graphics->setColor( 0.2f, 0.9f, blue );
+	graphics->setColor( 0.2f, 0.9f, blue );
 
-	// graphics->drawBoxFilled( 0.7f, 0.2f, 0.9f, 0.5f );
+	graphics->drawBoxFilled( 0.7f, 0.2f, 0.9f, 0.5f );
 
 	graphics->setColor( 0.5f, 0.5f, 0.5f );
 
@@ -250,25 +250,25 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 
 	// graphics->drawQuadFilled( trianglePixelX, trianglePixelY, 0.6f, 0.4f, 0.6f, 0.6f, 0.5f, 0.6f );
 
-	// graphics->setColor( 0.3f, 1.0f, 0.3f );
+	graphics->setColor( 0.3f, 1.0f, 0.3f );
 
-	// static float boxPixelXStart = -0.05f;
-	// static float boxPixelYStart = -0.05f;
-	// static float boxPixelIncr = 0.01f;
+	static float boxPixelXStart = -0.05f;
+	static float boxPixelYStart = -0.05f;
+	static float boxPixelIncr = 0.01f;
 
-	// graphics->drawBoxFilled( boxPixelXStart, boxPixelYStart, boxPixelXStart + 0.1f, boxPixelYStart + 0.1f );
+	graphics->drawBoxFilled( boxPixelXStart, boxPixelYStart, boxPixelXStart + 0.1f, boxPixelYStart + 0.1f );
 
-	// boxPixelXStart += boxPixelIncr;
-	// boxPixelYStart += boxPixelIncr;
+	boxPixelXStart += boxPixelIncr;
+	boxPixelYStart += boxPixelIncr;
 
-	// if (boxPixelXStart >= 2.0f)
-	// {
-	// 	boxPixelIncr = -0.01f;
-	// }
-	// else if (boxPixelXStart <= -1.0f)
-	// {
-	// 	boxPixelIncr = 0.01f;
-	// }
+	if (boxPixelXStart >= 2.0f)
+	{
+		boxPixelIncr = -0.01f;
+	}
+	else if (boxPixelXStart <= -1.0f)
+	{
+		boxPixelIncr = 0.01f;
+	}
 
 	// static float originX = 0.5f;
 	// static float originY = 0.5f;
