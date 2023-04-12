@@ -1,0 +1,115 @@
+# LIBRARIES
+
+
+# SIGL LIBRARY
+set( SIGL_LIB_NAME sigl
+
+	CACHE INTERNAL "SIGL_LIB_NAME"
+)
+
+set( SIGL_SOURCE_FILES
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/ColorProfile.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/Engine3D.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/Font.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/FrameBuffer.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/ObjFileLoader.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/OpenGlGraphics.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/SoftwareGraphics.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/Sprite.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/Surface.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/src/Texture.cpp
+
+	CACHE INTERNAL "SIGL_SOURCE_FILES"
+)
+
+set( SIGL_HEADER_FILES
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/ColorProfile.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Engine3D.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Font.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/FrameBuffer.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/FrameBufferOpenGl.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/FrameBufferSoftwareGraphics.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Graphics.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/GraphicsHelpers.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/IGraphics.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Matrix.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/ObjFileLoader.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/OpenGlGraphics.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/SoftwareGraphics.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Sprite.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Surface.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Texture.hpp
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include/Vector.hpp
+
+	CACHE INTERNAL "SIGL_HEADER_FILES"
+)
+
+set( SIGL_INCLUDE_DIRS
+	${CMAKE_CURRENT_LIST_DIR}/SIGL/include
+
+	CACHE INTERNAL "SIGL_INCLUDE_DIRS"
+)
+
+
+# IMGUI LIBRARY
+set( IMGUI_LIB_NAME imgui
+
+	CACHE INTERNAL "IMGUI_LIB_NAME"
+)
+
+set( IMGUI_SOURCE_FILES
+	${CMAKE_CURRENT_LIST_DIR}/imgui/imgui.cpp
+	${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_demo.cpp
+	${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_draw.cpp
+	${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_tables.cpp
+	${CMAKE_CURRENT_LIST_DIR}/imgui/imgui_widgets.cpp
+	${CMAKE_CURRENT_LIST_DIR}/imgui/backends/imgui_impl_glfw.cpp
+	${CMAKE_CURRENT_LIST_DIR}/imgui/backends/imgui_impl_opengl3.cpp
+
+	CACHE INTERNAL "IMGUI_SOURCE_FILES"
+)
+
+set( IMGUI_HEADER_FILES
+	${CMAKE_CURRENT_LIST_DIR}/imgui/imgui.h
+	${CMAKE_CURRENT_LIST_DIR}/imgui/backends/imgui_impl_glfw.h
+	${CMAKE_CURRENT_LIST_DIR}/imgui/backends/imgui_impl_opengl3.h
+
+	CACHE INTERNAL "IMGUI_HEADER_FILES"
+)
+
+set( IMGUI_INCLUDE_DIRS
+	${CMAKE_CURRENT_LIST_DIR}/imgui
+	${CMAKE_CURRENT_LIST_DIR}/imgui/backends
+
+	CACHE INTERNAL "IMGUI_INCLUDE_DIRS"
+)
+
+
+# ALL LIBRARY SOURCES, HEADERS, INCLUDE DIRS, AND LIBS
+set( LIB_SOURCE_FILES
+	${SIGL_SOURCE_FILES}
+	${IMGUI_SOURCE_FILES}
+
+	CACHE INTERNAL "LIB_SOURCE_FILES"
+)
+
+set( LIB_HEADER_FILES
+	${SIGL_HEADER_FILES}
+	${IMGUI_HEADER_FILES}
+
+	CACHE INTERNAL "LIB_HEADER_FILES"
+)
+
+set( LIB_INCLUDE_DIRS
+	${SIGL_INCLUDE_DIRS}
+	${IMGUI_INCLUDE_DIRS}
+
+	CACHE INTERNAL "LIB_INCLUDE_DIRS"
+)
+
+set( LIB_LIBRARIES
+	${SIGL_LIB_NAME}
+	${IMGUI_LIB_NAME}
+
+	CACHE INTERNAL "LIB_LIBRARIES"
+)
