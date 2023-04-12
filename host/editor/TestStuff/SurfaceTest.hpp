@@ -134,65 +134,65 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	graphics->setColor( 0.0f, 0.0f, 0.0f );
 	graphics->fill();
 
-	// graphics->setColor( 1.0f, 0.0, 0.0f );
-	// static float xOffset = 0.0f;
-	// xOffset += 0.01f;
-	// if ( xOffset > 2.0f ) xOffset = -2.0f;
-	// graphics->drawTriangleFilled( 0.2f + xOffset, 0.8f, 0.8f + xOffset, 0.8f, 0.5f + xOffset, 0.2f );
+	graphics->setColor( 1.0f, 0.0, 0.0f );
+	static float xOffset = 0.0f;
+	xOffset += 0.01f;
+	if ( xOffset > 2.0f ) xOffset = -2.0f;
+	graphics->drawTriangleFilled( 0.2f + xOffset, 0.8f, 0.8f + xOffset, 0.8f, 0.5f + xOffset, 0.2f );
 
-	// graphics->setColor( 0.0f, 0.0f, 1.0f );
-	// graphics->drawLine( 0.8f, 1.1f, xOffset, 0.1f );
+	graphics->setColor( 0.0f, 0.0f, 1.0f );
+	graphics->drawLine( 0.8f, 1.1f, xOffset, 0.1f );
 
 	static float blue = 0.1f;
 	graphics->setColor( 0.73f, 0.56f, blue );
 
-	// static bool flip = false;
-	// if (!flip)
-	// {
-	// 	my_square.topLeftX     += incr;
-	// 	my_square.bottomLeftX  += incr;
-	// 	my_square.topRightX    -= incr;
-	// 	my_square.bottomRightX -= incr;
-	// 	blue                   += incr;
+	static bool flip = false;
+	if (!flip)
+	{
+		my_square.topLeftX     += incr;
+		my_square.bottomLeftX  += incr;
+		my_square.topRightX    -= incr;
+		my_square.bottomRightX -= incr;
+		blue                   += incr;
 
-	// 	if (my_square.topLeftX >= 0.8f)
-	// 	{
-	// 		my_square.topLeftX     = 0.8f;
-	// 		my_square.bottomLeftX  = 0.8f;
-	// 		my_square.topRightX    = 0.2f;
-	// 		my_square.bottomRightX = 0.2f;
-	// 		flip = !flip;
-	// 	}
-	// }
-	// else
-	// {
-	// 	my_square.topLeftX     -= incr;
-	// 	my_square.bottomLeftX  -= incr;
-	// 	my_square.topRightX    += incr;
-	// 	my_square.bottomRightX += incr;
-	// 	blue                   -= incr;
+		if (my_square.topLeftX >= 0.8f)
+		{
+			my_square.topLeftX     = 0.8f;
+			my_square.bottomLeftX  = 0.8f;
+			my_square.topRightX    = 0.2f;
+			my_square.bottomRightX = 0.2f;
+			flip = !flip;
+		}
+	}
+	else
+	{
+		my_square.topLeftX     -= incr;
+		my_square.bottomLeftX  -= incr;
+		my_square.topRightX    += incr;
+		my_square.bottomRightX += incr;
+		blue                   -= incr;
 
-	// 	if (my_square.topLeftX <= 0.2f)
-	// 	{
-	// 		my_square.topLeftX     = 0.2f;
-	// 		my_square.bottomLeftX  = 0.2f;
-	// 		my_square.topRightX    = 0.8f;
-	// 		my_square.bottomRightX = 0.8f;
-	// 		flip = !flip;
-	// 	}
-	// }
+		if (my_square.topLeftX <= 0.2f)
+		{
+			my_square.topLeftX     = 0.2f;
+			my_square.bottomLeftX  = 0.2f;
+			my_square.topRightX    = 0.8f;
+			my_square.bottomRightX = 0.8f;
+			flip = !flip;
+		}
+	}
 
-	// graphics->drawQuad(
-	// 		my_square.topLeftX,     my_square.topLeftY,
-	// 		my_square.topRightX,    my_square.topRightY,
-	// 		my_square.bottomRightX, my_square.bottomRightY,
-	// 		my_square.bottomLeftX,  my_square.bottomLeftY   );
+	graphics->drawQuad(
+			my_square.topLeftX,     my_square.topLeftY,
+			my_square.topRightX,    my_square.topRightY,
+			my_square.bottomRightX, my_square.bottomRightY,
+			my_square.bottomLeftX,  my_square.bottomLeftY   );
 
-	// graphics->setColor( 1.0f, 0.1f, blue );
+	graphics->setColor( 1.0f, 0.1f, blue );
 
-	// graphics->drawTriangle( my_triangle.x1, my_triangle.y1, my_triangle.x2, my_triangle.y2, my_triangle.x3, my_triangle.y3 );
+	graphics->drawTriangle( my_triangle.x1, my_triangle.y1, my_triangle.x2, my_triangle.y2, my_triangle.x3, my_triangle.y3 );
 
-	// graphics->drawTriangle ( 0.1f, 0.4f, 0.0f, 0.2f, 0.0f, 0.6f );
+	graphics->drawTriangle ( 0.1f, 0.4f, 0.0f, 0.2f, 0.0f, 0.6f );
 
 	graphics->setColor( 0.2f, 0.9f, blue );
 
@@ -246,9 +246,9 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 		trianglePixelYIncr = 0.002f;
 	}
 
-	// graphics->setColor( 1.0f, 0.7f, 0.7f );
+	graphics->setColor( 1.0f, 0.7f, 0.7f );
 
-	// graphics->drawQuadFilled( trianglePixelX, trianglePixelY, 0.6f, 0.4f, 0.6f, 0.6f, 0.5f, 0.6f );
+	graphics->drawQuadFilled( trianglePixelX, trianglePixelY, 0.6f, 0.4f, 0.6f, 0.6f, 0.5f, 0.6f );
 
 	graphics->setColor( 0.3f, 1.0f, 0.3f );
 
@@ -270,37 +270,37 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 		boxPixelIncr = 0.01f;
 	}
 
-	// static float originX = 0.5f;
-	// static float originY = 0.5f;
-	// static float originXIncr = -0.05f;
-	// static float originYIncr = -0.02f;
-	// graphics->setColor( 1.0f, 1.0f, 1.0f );
-	// graphics->drawCircleFilled( originX, originY, 0.2f );
+	static float originX = 0.5f;
+	static float originY = 0.5f;
+	static float originXIncr = -0.05f;
+	static float originYIncr = -0.02f;
+	graphics->setColor( 1.0f, 1.0f, 1.0f );
+	graphics->drawCircleFilled( originX, originY, 0.2f );
 
-	// originX += originXIncr;
-	// originY += originYIncr;
+	originX += originXIncr;
+	originY += originYIncr;
 
-	// if (originX < -0.5f)
-	// {
-	// 	originX = -0.5f;
-	// 	originXIncr = 0.05f;
-	// }
-	// else if (originX > 1.5f)
-	// {
-	// 	originX = 1.5f;
-	// 	originXIncr = -0.05f;
-	// }
+	if (originX < -0.5f)
+	{
+		originX = -0.5f;
+		originXIncr = 0.05f;
+	}
+	else if (originX > 1.5f)
+	{
+		originX = 1.5f;
+		originXIncr = -0.05f;
+	}
 
-	// if (originY < -0.5f)
-	// {
-	// 	originY = -0.5f;
-	// 	originYIncr = 0.02f;
-	// }
-	// else if (originY > 1.5f)
-	// {
-	// 	originY = 1.5f;
-	// 	originYIncr = -0.02f;
-	// }
+	if (originY < -0.5f)
+	{
+		originY = -0.5f;
+		originYIncr = 0.02f;
+	}
+	else if (originY > 1.5f)
+	{
+		originY = 1.5f;
+		originYIncr = -0.02f;
+	}
 
 	// static float textScale = 10.0f;
 	// static float textScaleIncr = -0.1f;
