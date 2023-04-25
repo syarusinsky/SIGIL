@@ -4,6 +4,8 @@
 #include "Surface.hpp"
 #include "ObjFileLoader.hpp"
 
+#include <iostream>
+
 // PS1 resolution: 640, 480 ARMor8 resolution: 128, 64
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 480
@@ -301,6 +303,16 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 		originY = 1.5f;
 		originYIncr = -0.02f;
 	}
+
+	static float scaleAmnt = 1.0f;
+	static float rotAngle = 0.0f;
+	test_sprite_ptr->setScaleFactor( scaleAmnt );
+	test_sprite_ptr->setRotationPointX( 0.5f );
+	test_sprite_ptr->setRotationPointY( 0.5f );
+	test_sprite_ptr->setRotationAngle( rotAngle );
+	graphics->drawSprite( 0.5f, 0.5f, *test_sprite_ptr );
+	// rotAngle += 0.9f;
+	// scaleAmnt -= 0.001f;
 
 	// static float textScale = 10.0f;
 	// static float textScaleIncr = -0.1f;
