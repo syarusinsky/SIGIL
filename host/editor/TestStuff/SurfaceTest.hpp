@@ -329,14 +329,12 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	// if ( textX > 1.2f || textX < -0.5f) textXMov = textXMov * -1.0f;
 	// if ( textY < -0.2f || textY > 1.0f ) textYMov = textYMov * -1.0f;
 
-	// /*
 	// // tests all characters
-	// graphics->setColor( 0.5f, 1.0f, 1.0f );
-	// graphics->drawText( 0.0f, 0.0f, "abcdefghijklmnopqrstuvwxyz", 3.0f );
-	// graphics->drawText( 0.0f, 0.1f, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 3.0f );
-	// graphics->drawText( 0.0f, 0.2f, "0123456789`~!@#$%^&*()-_=+", 3.0f );
-	// graphics->drawText( 0.0f, 0.3f, "[{]}\\|;:'\",<.>/?", 3.0f );
-	// */
+	// // graphics->setColor( 0.5f, 1.0f, 1.0f );
+	// // graphics->drawText( 0.0f, 0.0f, "abcdefghijklmnopqrstuvwxyz", 3.0f );
+	// // graphics->drawText( 0.0f, 0.1f, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 3.0f );
+	// // graphics->drawText( 0.0f, 0.2f, "0123456789`~!@#$%^&*()-_=+", 3.0f );
+	// // graphics->drawText( 0.0f, 0.3f, "[{]}\\|;:'\",<.>/?", 3.0f );
 
 	// static float spriteScale = 1.5f;
 	// static float spriteScaleIncr = -0.01f;
