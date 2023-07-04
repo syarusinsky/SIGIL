@@ -355,68 +355,70 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	// if ( spriteX > 0.9f || spriteX < -0.1f ) spriteXMov = spriteXMov * -1.0f;
 	// if ( spriteY > 0.7f || spriteY < -0.2f ) spriteYMov = spriteYMov * -1.0f;
 
-	// // TODO remove this once the 3D engine has a proper mesh rendering algorithm
-	// // draw cube
-	// std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray1 = { test_texture1_ptr };
-	// std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray2 = { test_texture2_ptr };
-	// float aspectRatio = static_cast<float>(this->getWidth()) / static_cast<float>(this->getHeight());
-	// Camera3D camera( 0.01f, 10.0f, 60.0f, aspectRatio );
-	// Mesh model1 = m_Mesh1;
-	// Mesh model2 = m_Mesh2;
-	// model1.transformMat = generateIdentityMatrix();
-	// model2.transformMat = generateIdentityMatrix();
-	// static float xTranslate = 0.0f;
-	// static float xTranslateIncr = 0.01f;
-	// static float xRotation = 0.0f;
-	// static float xRotationIncr = 1.0f;
-	// TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize> shaderData1{ texArray1, camera, Color(), nullptr, m_VShader, m_FShader };
-	// TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize> shaderData2{ texArray2, camera, Color(), nullptr, m_VShader, m_FShader };
-	// model1.rotate( 180.0f, xRotation, 0.0f );
-	// model2.rotate( xRotation, xRotation * 0.5f, 0.0f );
-	// model1.translate( 0.0f, 0.0f, 2.5f );
-	// model2.translate( 0.0f, 0.0f, 8.0f );
-	// model1.translate( 0.0f, xTranslate * 0.5f, 0.0f );
-	// model2.translate( xTranslate * 2.0f, 0.0f, 0.0f );
-	// for ( Face face : model1.faces )
-	// {
-	// 	// TODO transforms should be applied in a pipeline
-	// 	face.vertices[0].vec = face.vertices[0].vec * model1.transformMat;
-	// 	face.vertices[1].vec = face.vertices[1].vec * model1.transformMat;
-	// 	face.vertices[2].vec = face.vertices[2].vec * model1.transformMat;
-	// 	face.vertices[0].normal = face.vertices[0].normal * model1.transformMat;
-	// 	face.vertices[1].normal = face.vertices[1].normal * model1.transformMat;
-	// 	face.vertices[2].normal = face.vertices[2].normal * model1.transformMat;
+	// TODO remove this once the 3D engine has a proper mesh rendering algorithm
+	// draw cube
+	std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray1 = { test_texture1_ptr };
+	std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray2 = { test_texture2_ptr };
+	const float aspectRatio = static_cast<float>( this->getWidth() ) / static_cast<float>( this->getHeight() );
+	Camera3D camera( 0.01f, 1000.0f, 60.0f, aspectRatio );
+	Mesh model1 = m_Mesh1;
+	Mesh model2 = m_Mesh2;
+	model1.transformMat = generateIdentityMatrix();
+	model2.transformMat = generateIdentityMatrix();
+	static float xTranslate = 0.0f;
+	static float xTranslateIncr = 0.1f;
+	static float xRotation = 0.0f;
+	static float xRotationIncr = 1.0f;
+	TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize> shaderData1{ texArray1, camera, Color(), nullptr, m_VShader, m_FShader };
+	TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize> shaderData2{ texArray2, camera, Color(), nullptr, m_VShader, m_FShader };
+	model1.scale( 25.0f );
+	model2.scale( 10.0f );
+	model1.rotate( 180.0f, xRotation, 0.0f );
+	model2.rotate( xRotation, xRotation * 0.5f, 0.0f );
+	model1.translate( 0.0f, 0.0f, 75.0f );
+	model2.translate( 0.0f, 0.0f, 100.0f );
+	model1.translate( 0.0f, xTranslate * 0.5f, 0.0f );
+	model2.translate( xTranslate * 2.0f, 0.0f, 0.0f );
+	for ( Face face : model1.faces )
+	{
+		// TODO transforms should be applied in a pipeline
+		face.vertices[0].vec = face.vertices[0].vec * model1.transformMat;
+		face.vertices[1].vec = face.vertices[1].vec * model1.transformMat;
+		face.vertices[2].vec = face.vertices[2].vec * model1.transformMat;
+		face.vertices[0].normal = face.vertices[0].normal * model1.transformMat; // TODO scaling applied to normals causes weird lighting
+		face.vertices[1].normal = face.vertices[1].normal * model1.transformMat;
+		face.vertices[2].normal = face.vertices[2].normal * model1.transformMat;
 
-	// 	graphics->drawTriangleShaded( face, shaderData1 );
-	// }
+		graphics->drawTriangleShaded( face, shaderData1 );
+	}
 
-	// for ( Face face : model2.faces )
-	// {
-	// 	// TODO transforms should be applied in a pipeline
-	// 	face.vertices[0].vec = face.vertices[0].vec * model2.transformMat;
-	// 	face.vertices[1].vec = face.vertices[1].vec * model2.transformMat;
-	// 	face.vertices[2].vec = face.vertices[2].vec * model2.transformMat;
-	// 	face.vertices[0].normal = face.vertices[0].normal * model2.transformMat;
-	// 	face.vertices[1].normal = face.vertices[1].normal * model2.transformMat;
-	// 	face.vertices[2].normal = face.vertices[2].normal * model2.transformMat;
+	for ( Face face : model2.faces )
+	{
+		// TODO transforms should be applied in a pipeline
+		face.vertices[0].vec = face.vertices[0].vec * model2.transformMat;
+		face.vertices[1].vec = face.vertices[1].vec * model2.transformMat;
+		face.vertices[2].vec = face.vertices[2].vec * model2.transformMat;
+		face.vertices[0].normal = face.vertices[0].normal * model2.transformMat;
+		face.vertices[1].normal = face.vertices[1].normal * model2.transformMat;
+		face.vertices[2].normal = face.vertices[2].normal * model2.transformMat;
 
-	// 	graphics->drawTriangleShaded( face, shaderData2 );
-	// }
+		graphics->drawTriangleShaded( face, shaderData2 );
+	}
 
-	// xTranslate += xTranslateIncr;
-	// if ( xTranslate >= 3.0f )
-	// {
-	// 	xTranslateIncr *= -1.0f;
-	// }
-	// else if ( xTranslate <= -3.0f )
-	// {
-	// 	xTranslateIncr *= -1.0f;
-	// }
-	// xRotation += xRotationIncr;
-	// if ( xRotation >= 360.0f || xRotation <= 0.0f )
-	// {
-	// 	xRotationIncr = -xRotationIncr;
-	// }
+	xTranslate += xTranslateIncr;
+	if ( xTranslate >= 50.0f )
+	{
+		xTranslateIncr *= -1.0f;
+	}
+	else if ( xTranslate <= -50.0f )
+	{
+		xTranslateIncr *= -1.0f;
+	}
+	xRotation += xRotationIncr;
+	if ( xRotation >= 360.0f || xRotation <= 0.0f )
+	{
+		xRotationIncr = -xRotationIncr;
+	}
 
 	// graphics->drawDepthBuffer( camera );
 }
