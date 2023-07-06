@@ -7,7 +7,7 @@ project( ${TARGET_NAME} )
 # C/C++ FLAGS AND STANDARDS
 set( CMAKE_CXX_STANDARD 17 )
 set( CXX_AND_C_FLAGS
-"-Wall \
+"-w \
 -Wextra \
 -Ofast \
 -g \
