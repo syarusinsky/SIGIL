@@ -311,8 +311,8 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	test_sprite_ptr->setRotationPointY( 0.5f );
 	test_sprite_ptr->setRotationAngle( rotAngle );
 	graphics->drawSprite( 0.5f, 0.5f, *test_sprite_ptr );
-	// rotAngle += 0.9f;
-	// scaleAmnt -= 0.001f;
+	rotAngle = std::fmod( rotAngle + 0.9f, 360.0f );
+	scaleAmnt = std::fmod( scaleAmnt + 0.001f, 1.5f );
 
 	// static float textScale = 10.0f;
 	// static float textScaleIncr = -0.1f;
