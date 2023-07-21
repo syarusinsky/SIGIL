@@ -8,6 +8,7 @@ project( ${TARGET_NAME} )
 set( CMAKE_CXX_STANDARD 17 )
 set( CXX_AND_C_FLAGS
 "-w \
+-save-temps \
 -Wextra \
 -Ofast \
 -g \
