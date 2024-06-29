@@ -13,7 +13,7 @@
 
 #define FONT_FILE_SIZE 779
 
-#define SPRITE_FILE_SIZE 88365
+#define SPRITE_FILE_SIZE 109
 
 #define TEXTURE_FILE_SIZE 262153
 
@@ -304,15 +304,15 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 		originYIncr = -0.02f;
 	}
 
-	static float scaleAmnt = 1.0f;
-	static float rotAngle = 0.0f;
+	static float scaleAmnt = 20.0f;
+	static float rotAngle = 20.0f;
 	test_sprite_ptr->setScaleFactor( scaleAmnt );
 	test_sprite_ptr->setRotationPointX( 0.5f );
 	test_sprite_ptr->setRotationPointY( 0.5f );
 	test_sprite_ptr->setRotationAngle( rotAngle );
-	graphics->drawSprite( 0.5f, 0.5f, *test_sprite_ptr );
+	graphics->drawSprite( 0.5f, 0.25f, *test_sprite_ptr );
 	rotAngle = std::fmod( rotAngle + 0.9f, 360.0f );
-	scaleAmnt = std::fmod( scaleAmnt + 0.001f, 1.5f );
+	scaleAmnt = std::fmod( scaleAmnt + 0.01f, 20.0f );
 
 	// static float textScale = 10.0f;
 	// static float textScaleIncr = -0.1f;

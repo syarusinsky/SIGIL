@@ -37,7 +37,7 @@ void initStuff()
 
 	nSize = SPRITE_FILE_SIZE;
 	std::ifstream spriteFile;
-	spriteFile.open( "../../host/editor/TestStuff/TestImage.sif" );
+	spriteFile.open( "../../host/editor/TestStuff/transparency-test.sif" );
 	spriteFile.read( test_sprite, nSize );
 	spriteFile.close();
 
