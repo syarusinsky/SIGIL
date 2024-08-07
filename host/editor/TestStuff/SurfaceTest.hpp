@@ -304,7 +304,7 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 		originYIncr = -0.02f;
 	}
 
-	static float scaleAmnt = 20.0f;
+	static float scaleAmnt = 1.0f;
 	static float rotAngle = 0.0f;
 	test_sprite_ptr->setScaleFactor( scaleAmnt );
 	test_sprite_ptr->setRotationPointX( 0.5f );
