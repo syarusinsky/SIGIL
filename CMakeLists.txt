@@ -188,6 +188,7 @@ include_directories( ${INCLUDE_DIRS} )
 
 
 # ADDING LIBRARIES
+add_library( ${SLOG_LIB_NAME} STATIC ${SLOG_SOURCE_FILES} )
 add_library( ${SIGL_LIB_NAME} STATIC ${SIGL_SOURCE_FILES} )
 add_library( ${IMGUI_LIB_NAME} STATIC ${IMGUI_SOURCE_FILES} )
 
