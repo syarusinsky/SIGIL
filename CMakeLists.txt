@@ -39,11 +39,13 @@ set( SOURCE_FILES
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/main.cpp
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/TestStuff/SurfaceTest.cpp
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/TestStuff/SurfaceHandler.cpp
+	${CMAKE_CURRENT_LIST_DIR}/host/editor/SLOGE.cpp
 )
 
 set( HEADER_FILES
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/TestStuff/SurfaceTest.hpp
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/TestStuff/SurfaceHandler.hpp
+	${CMAKE_CURRENT_LIST_DIR}/host/editor/SLOGE.hpp
 )
 
 set( INCLUDE_DIRS
