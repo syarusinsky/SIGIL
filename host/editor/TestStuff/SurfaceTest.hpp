@@ -4,8 +4,6 @@
 #include "Surface.hpp"
 #include "ObjFileLoader.hpp"
 
-#include <iostream>
-
 // PS1 resolution: 640, 480 ARMor8 resolution: 128, 64
 #define SCREEN_WIDTH  640
 #define SCREEN_HEIGHT 480
@@ -113,7 +111,7 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	ObjFileLoader loader;
 	if ( ! loader.createMeshFromFile(m_Mesh1, filePath) )
 	{
-		std::cout << "Failed to load obj file" << std::endl;
+		SLOG::log( LogLevels::ERROR, LogMethodsE::ERROR, "Failed to load .obj file", __LINE__, __FILE__ );
 	}
 }
 
@@ -124,7 +122,7 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	ObjFileLoader loader;
 	if ( ! loader.createMeshFromFile(m_Mesh2, filePath) )
 	{
-		std::cout << "Failed to load obj file" << std::endl;
+		SLOG::log( LogLevels::ERROR, LogMethodsE::ERROR, "Failed to load .obj file", __LINE__, __FILE__ );
 	}
 }
 

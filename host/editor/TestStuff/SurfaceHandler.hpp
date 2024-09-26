@@ -71,7 +71,7 @@ class SurfaceHandler
 			{
 				char infoLog[512];
 				glGetShaderInfoLog( vertexShader, 512, NULL, infoLog );
-				std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+				SLOG::log( LogLevels::ERROR, LogMethodsE::ERROR, "OpenGL error : vertex shader compilation failed", __LINE__, __FILE__ );
 			};
 			glCompileShader( fragmentShader );
 			glGetShaderiv( fragmentShader, GL_COMPILE_STATUS, &success );
@@ -79,7 +79,7 @@ class SurfaceHandler
 			{
 				char infoLog[512];
 				glGetShaderInfoLog( fragmentShader, 512, NULL, infoLog );
-				std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+				SLOG::log( LogLevels::ERROR, LogMethodsE::ERROR, "OpenGL error : fragment shader compilation failed", __LINE__, __FILE__ );
 			};
 			m_FBProgram = glCreateProgram();
 			glAttachShader( m_FBProgram, vertexShader );
@@ -90,7 +90,7 @@ class SurfaceHandler
 			{
 				char infoLog[512];
 				glGetProgramInfoLog( m_FBProgram, 512, NULL, infoLog );
-				std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
+				SLOG::log( LogLevels::ERROR, LogMethodsE::ERROR, "OpenGL error : shader program linking failed", __LINE__, __FILE__ );
 			}
 			glDeleteShader( vertexShader );
 			glDeleteShader( fragmentShader );
