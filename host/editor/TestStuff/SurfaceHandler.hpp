@@ -263,11 +263,11 @@ class SurfaceHandler
 			glFlush();
 		}
 
-		static void vShader (TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& vShaderData)
+		static void vShader (TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize>& vShaderData)
 		{
 		}
 
-		static void fShader (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& fShaderData, float v1Cur, float v2Cur,
+		static void fShader (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize>& fShaderData, float v1Cur, float v2Cur,
 				float v3Cur, float texCoordX, float texCoordY, float lightAmnt)
 		{
 			colorOut = fShaderData.textures[0]->getColor( texCoordX, texCoordY ) * lightAmnt;

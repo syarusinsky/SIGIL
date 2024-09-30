@@ -1,0 +1,8 @@
+#ifndef EDITORCONSTANTS_HPP
+#define EDITORCONSTANTS_HPP
+
+#include "ColorProfile.hpp"
+
+constexpr RENDER_API CURRENT_RENDER_API = RENDER_API::SOFTWARE;
+
+#endif // EDITORCONSTANTS_HPP

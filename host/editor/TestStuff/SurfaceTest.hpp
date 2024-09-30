@@ -1,6 +1,7 @@
 #ifndef SURFACETEST_HPP
 #define SURFACETEST_HPP
 
+#include "EditorConstants.hpp"
 #include "Surface.hpp"
 #include "ObjFileLoader.hpp"
 
@@ -17,13 +18,13 @@
 
 class Font;
 
-extern Font* 				my_font_ptr;
+extern Font* 							my_font_ptr;
 
-extern Sprite<CP_FORMAT::RGBA_32BIT>* 	test_sprite_ptr;
+extern Sprite<CP_FORMAT::RGBA_32BIT, CURRENT_RENDER_API>* 	test_sprite_ptr;
 
-extern Texture<CP_FORMAT::RGBA_32BIT>* 	test_texture1_ptr;
+extern Texture<CP_FORMAT::RGBA_32BIT, CURRENT_RENDER_API>* 	test_texture1_ptr;
 
-extern Texture<CP_FORMAT::RGBA_32BIT>*  test_texture2_ptr;
+extern Texture<CP_FORMAT::RGBA_32BIT, CURRENT_RENDER_API>*  	test_texture2_ptr;
 
 void initStuff();
 
@@ -43,12 +44,12 @@ class SurfaceTest : public Surface<api, width, height, format, numThreads, inclu
 		void loadMesh1 (const std::string& filePath);
 		void loadMesh2 (const std::string& filePath);
 
-		void setMeshVShader (void (*shader) (TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& vShaderData))
+		void setMeshVShader (void (*shader) (TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize>& vShaderData))
 		{
 			m_VShader = shader;
 		}
 
-		void setMeshFShader (void (*shader) (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& fShaderData, float v1Cur,
+		void setMeshFShader (void (*shader) (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize>& fShaderData, float v1Cur,
 					float v2Cur, float v3Cur, float texCoordX, float texCoordY, float lightAmnt))
 		{
 			m_FShader = shader;
@@ -60,8 +61,8 @@ class SurfaceTest : public Surface<api, width, height, format, numThreads, inclu
 		Mesh m_Mesh1;
 		Mesh m_Mesh2;
 
-		void (*m_VShader) (TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& vShaderData);
-		void (*m_FShader) (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize>& fShaderData, float v1Cur, float v2Cur,
+		void (*m_VShader) (TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize>& vShaderData);
+		void (*m_FShader) (Color& colorOut, TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize>& fShaderData, float v1Cur, float v2Cur,
 				float v3Cur, float texCoordX, float texCoordY, float lightAmnt);
 };
 
@@ -355,8 +356,8 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 
 	// TODO remove this once the 3D engine has a proper mesh rendering algorithm
 	// draw cube
-	std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray1 = { test_texture1_ptr };
-	std::array<Texture<CP_FORMAT::RGBA_32BIT>*, 5> texArray2 = { test_texture2_ptr };
+	std::array<Texture<CP_FORMAT::RGBA_32BIT, api>*, 5> texArray1 = { test_texture1_ptr };
+	std::array<Texture<CP_FORMAT::RGBA_32BIT, api>*, 5> texArray2 = { test_texture2_ptr };
 	const float aspectRatio = static_cast<float>( this->getWidth() ) / static_cast<float>( this->getHeight() );
 	Camera3D camera( 0.01f, 1000.0f, 60.0f, aspectRatio );
 	Mesh model1 = m_Mesh1;
@@ -367,8 +368,8 @@ void SurfaceTest<api, width, height, format, numThreads, include3D, shaderPassDa
 	static float xTranslateIncr = 0.1f;
 	static float xRotation = 0.0f;
 	static float xRotationIncr = 1.0f;
-	TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize> shaderData1{ texArray1, camera, Color(), nullptr, m_VShader, m_FShader };
-	TriShaderData<CP_FORMAT::RGBA_32BIT, shaderPassDataSize> shaderData2{ texArray2, camera, Color(), nullptr, m_VShader, m_FShader };
+	TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize> shaderData1{ texArray1, camera, Color(), nullptr, m_VShader, m_FShader };
+	TriShaderData<CP_FORMAT::RGBA_32BIT, api, shaderPassDataSize> shaderData2{ texArray2, camera, Color(), nullptr, m_VShader, m_FShader };
 	model1.scale( 25.0f );
 	model2.scale( 10.0f );
 	model1.rotate( 180.0f, xRotation, 0.0f );

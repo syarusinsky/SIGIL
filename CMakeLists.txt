@@ -46,6 +46,7 @@ set( HEADER_FILES
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/TestStuff/SurfaceTest.hpp
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/TestStuff/SurfaceHandler.hpp
 	${CMAKE_CURRENT_LIST_DIR}/host/editor/SLOGE.hpp
+	${CMAKE_CURRENT_LIST_DIR}/host/editor/EditorConstants.hpp
 )
 
 set( INCLUDE_DIRS

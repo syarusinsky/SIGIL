@@ -10,6 +10,7 @@
 #endif
 #include <GLFW/glfw3.h> // Will drag system OpenGL headers
 
+#include "EditorConstants.hpp"
 #include "SurfaceHandler.hpp"
 #include "SLOGE.hpp"
 
@@ -94,7 +95,7 @@ int main(int, char**)
 	ImVec4 clear_color = ImVec4( 0.45f, 0.55f, 0.60f, 1.00f );
 
 	// MY TEST SURFACE ------------------------------------------------------------------
-	SurfaceHandler<RENDER_API::SOFTWARE, 640, 480, CP_FORMAT::RGB_24BIT, 1, true, 1024> surface;
+	SurfaceHandler<CURRENT_RENDER_API, 640, 480, CP_FORMAT::RGB_24BIT, 1, true, 1024> surface;
 	// ----------------------------------------------------------------------------------
 
 	// Main loop
