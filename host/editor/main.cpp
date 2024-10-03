@@ -95,7 +95,9 @@ int main(int, char**)
 	ImVec4 clear_color = ImVec4( 0.45f, 0.55f, 0.60f, 1.00f );
 
 	// MY TEST SURFACE ------------------------------------------------------------------
+	SLOG::log( LogLevels::INFO, LogMethodsE::INFO, "Creating surface...", __LINE__, __FILE__ );
 	SurfaceHandler<CURRENT_RENDER_API, 640, 480, CP_FORMAT::RGB_24BIT, 1, true, 1024> surface;
+	SLOG::log( LogLevels::INFO, LogMethodsE::INFO, "Entering main loop...", __LINE__, __FILE__ );
 	// ----------------------------------------------------------------------------------
 
 	// Main loop
